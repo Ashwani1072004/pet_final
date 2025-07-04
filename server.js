@@ -4,10 +4,12 @@ const fileUpload = require("express-fileupload");
 require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 const app = express();
-
 app.listen(PORT, () => {
     console.log(`server started on port ${PORT}`);
+}).on('error', (err) => {
+    console.error("Server error:", err);
 });
+
 
 
 var dbConfigurationObj = {
@@ -93,7 +95,11 @@ app.get("/dcaretkr-profile", function (req, resp) {
 });
 
 
-app.use(fileUpload());
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: './tmp'
+}));
+
 app.use(express.urlencoded({ extended: true }));
 
 app.post("/client-profile-form-post", function (req, resp) {
